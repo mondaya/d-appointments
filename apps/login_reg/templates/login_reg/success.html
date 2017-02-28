@@ -1,0 +1,67 @@
+<!DOCTYPE hmtl>
+<html>
+    <head>
+        <meta charset="utf8" />
+        <meta name="descripition" content="Learning about Django"/>
+        <title>Courses</title>
+        
+        {% load static %}
+        <link rel="stylesheet" href={% static "first_app/css/index.css"  %}></link>
+        <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+        <script type="text/javascript" src={% static "first_app/js/index.js"  %}></script> 
+        <style>
+            p{
+                color:green;
+             }
+             table, th, td {
+                border: 1px solid black;
+                padding: 15px;
+            }
+        </style>
+       
+    </head>
+    <body>
+        <div id="container"> 
+            <h2>Sucess! Welcome, {{first_name}}!</h2>
+            <p><small>Succesfully {{status}}</small></p>
+            
+            <form  action="{% url 'courses:create_user' %}"  method="post">
+                {% csrf_token %} 
+                <select name="user_id">
+                    {% for user in users %} 
+                    <option value='{{user.id}}'>{{user.first_name}}_{{user.last_name}}</option>'
+                    {% endfor %}
+                </select>
+                 <select name="course_id">
+                    {% for course in courses %} 
+                    <option value='{{course.id}}'>{{course.course_name}}</option>
+                    {% endfor %}
+                </select>
+                  
+                <input type="submit" value="Add User To Course"/>              
+            </form>
+            
+            <div id="courses_user_distro">
+                <table>
+                    <th>Course</th>
+                    <th>Title</th>
+                    <th>Numbero of Users</th>
+                    {% for course in courses %}
+                        <tr>
+                            <td>{{course.id}}</td> 
+                            <td>{{course.course_name}}</td>  
+                            <td>{{course.users.count}}</td>                             
+                        </tr>
+                    {% endfor %}
+                </table>
+                                  
+            </div> 
+            <br>
+            <form  action="/logout"  method="post">
+                {% csrf_token %}               
+                <input type="submit" value="logout"/>              
+            </form>
+                                  
+        </div>
+    </body>
+</html>

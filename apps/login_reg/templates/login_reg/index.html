@@ -1,0 +1,61 @@
+<!DOCTYPE hmtl>
+<html>
+    <head>
+        <meta charset="utf8" />
+        <meta name="descripition" content="Learning about Django"/>
+        <title>Courses</title>
+        
+        {% load static %}
+        <link rel="stylesheet" href={% static "first_app/css/index.css"  %}></link>
+        <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+        <script type="text/javascript" src={% static "first_app/js/index.js"  %}></script> 
+        <style>
+            label {
+                   vertical-align:top;
+                   display:inline-block;
+                   width:130px;
+                   text-align:right;
+            }
+            form input {                
+                margin-bottom:10px;
+                margin-left:5px;
+            }
+            form input[type=submit] {
+                margin-left:230px;
+                width:80px;
+                color:white;
+                background-color:blue;
+            }            
+        </style>
+       
+    </head>
+    <body>
+        <div id="container"> 
+            <form  action="{% url 'home:register' %}"  method="post">
+                {% csrf_token %}
+                <h4>Registration</h4>
+                  {% for message in messages %}
+                    <p>{{ message }}</p>
+                  {% endfor %}
+                <label>First Name:</label><input type="text" name="first_name"/><br>
+                <label>Last Name:</label><input type="text" name="last_name"/><br>
+                <label>Email:</label><input type="email" name="email"/><br>
+                <label>Password:</label><input type="password" name="password"/><br>
+                <label>Confirm Password:</label><input type="password" name="confirm_ps"/><br>
+                <label>Date Hired:</label><input type="text" name="date_hired" placeHolder="MM/DD/YYYY"/><br>
+                
+                <input type="submit" name="resgiter" value="Resgiter"/><br>                
+            </form> 
+
+            <form  action="{% url 'home:login' %}"  method="post">
+                {% csrf_token %}
+                <h3>Login</h3>
+                <label>Email:</label><input type="email" name="email"/><br>
+                <label>Password:</label><input type="password" name="password"/><br>                
+                <input type="submit" name="login" value="Login"/><br>                
+            </form>        
+                                
+                              
+        </div>
+    </body>
+</html>

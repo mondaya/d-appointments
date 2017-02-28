@@ -1,0 +1,92 @@
+<!DOCTYPE hmtl>
+<html>
+    <head>
+        <meta charset="utf8" />
+        <meta name="descripition" content="Learning about Django"/>
+        <title>Courses</title>
+        
+        {% load static %}
+        <link rel="stylesheet" href={% static "first_app/css/index.css"  %}></link>
+        <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+        <script type="text/javascript" src={% static "first_app/js/index.js"  %}></script> 
+        <style>
+            p{
+                color:green;
+             }
+             table, th, td {
+                border: 1px solid black;
+                padding: 5px;
+            }
+        </style>
+       
+    </head>
+    <body>
+        <div id="container"> 
+            <h2>Sucess! Welcome, {{first_name}}!</h2>
+            <p><small>Succesfully {{status}}</small></p>
+            
+            <form  action="{% url 'home:logout' %}"  method="post">
+                {% csrf_token %}               
+                <input type="submit" value="logout"/>              
+            </form>  
+            
+            <div id="my_appoitments">
+                <p>Here are appintments for today,{{ task_date|date:"D d M Y" }} </p>
+                
+                <table>
+                    <th>Task</th>
+                    <th>Time</th>
+                    <th>Status</th> 
+                    <th>Action</th>                    
+                    {% for appointment in current_appointments %}
+                        <tr>
+                            <td>{{appointment.task}}</td> 
+                            <td>{{appointment.taskdatetime|date:"H:i"}}</td>  
+                            <td>{{appointment.status}}</td> 
+                            {% if appointment.status == "Pending" %} 
+                                <td>
+                                    <a href="{% url 'dashboard:show_update' task_id=appointment.id %}" >Edit</a>  
+                                    <a href="{% url 'dashboard:show_delete' task_id=appointment.id %}">Delete</a>
+                                </td>
+                            
+                                
+                            {% endif %}                            
+                        </tr>
+                    {% endfor %}
+                </table>                                  
+            </div> 
+            <br>
+            <div id="other_appointments">
+                <p>Your Other appointments</p>
+                <table>
+                    <th>Task</th>
+                    <th>Date</th> 
+                    <th>Time</th>                                                         
+                    {% for appointment in other_appointments %}
+                        <tr>
+                            <td>{{appointment.task}}</td> 
+                            <td>{{ appointment.taskdatetime|date:"D d M Y" }}</td> 
+                            <td>{{appointment.taskdatetime|date:"H:i"}}</td>  
+                                                                               
+                        </tr>
+                    {% endfor %}
+                </table>                                  
+            </div>  
+
+            <form  action="{% url 'dashboard:create' %}"  method="post">
+                {% csrf_token %}
+                <h4>Add Appointment</h4>
+                  {% for message in messages %}
+                    <p>{{ message }}</p>
+                  {% endfor %}
+                <label>Date:</label><input type="text" name="date" placeHolder="MM/DD/YYYY"/><br>
+                <label>Time:</label><input type="text" name="time" placeHolder="HH:MM"/><br>
+                <label>Tasks:</label><input type="text" name="task"/><br>
+                <input type="hidden" name="status" value="Pending"/><br> 
+                <input type="submit" name="add" value="Add"/><br>                
+            </form>             
+            
+                              
+        </div>
+    </body>
+</html>

@@ -1,0 +1,58 @@
+<!DOCTYPE hmtl>
+<html>
+    <head>
+        <meta charset="utf8" />
+        <meta name="descripition" content="Learning about Django"/>
+        <title>Courses</title>
+        
+        {% load static %}
+        <link rel="stylesheet" href={% static "first_app/css/index.css"  %}></link>
+        <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+        <script type="text/javascript" src={% static "first_app/js/index.js"  %}></script> 
+        <style>
+            label {
+                   margin:20px;
+                   margin-left:0px;
+                   vertical-align:top;
+            }
+            form input {
+                margin-left:40px;
+                margin-bottom:10px;
+            }
+            form input[type=submit] {
+                margin-left:400px;
+                height:45px;
+                width:80px;
+                color:white;
+                background-color:blue;
+            }
+            
+            
+            
+        </style>
+       
+    </head>
+    <body>
+        <div id="container"> 
+           <form  action="{% url 'dashboard:update'  task_id=appointment.id %}"  method="post">
+                {% csrf_token %}
+                <h4>Update Appointment</h4>
+                  {% for message in messages %}
+                    <p>{{ message }}</p>
+                  {% endfor %}
+                <label>Date:</label><input type="text" name="date" placeHolder="MM/DD/YYYY"  value='{{appointment.taskdatetime|date:"m/d/Y"}}'/><br>
+                <label>Time:</label><input type="text" name="time" placeHolder="HH:MM" value='{{appointment.taskdatetime|date:"H:i"}}'/><br>
+                <label>Tasks:</label><input type="text" name="task"/ value='{{appointment.task}}'><br>
+                <label>Status:</label>
+                <select name="status" value='{{appointment.status}}'>
+                  <option value="Pending">Pending</option>
+                  <option value="Done">Done</option> 
+                   <option value="Missed">Missed</option>                   
+                </select><br>                 
+                <input type="submit" name="add" value="Update"/><br>                
+            </form>         
+            
+             <a href="{% url 'dashboard:home' %}">Home</a>   |      <a href="{% url 'home:logout' %}">Logout</a>         
+        </div>
+    </body>
+</html>
