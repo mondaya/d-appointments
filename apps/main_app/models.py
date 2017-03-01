@@ -39,18 +39,21 @@ class AppointmentManager(models.Manager):
         if len(errors):
             return {'status':True, 'errors':errors}
         else:
-            return {'status':False, 'datetime':datetime_object}        
+            return {'status':False, 'datetime':datetime_object}   
+            
     def getCurrentTasks(self, user_id):
-        today = datetime.utcnow()
-        tasks =  self.filter(user__id=user_id, taskdatetime__year=today.year,taskdatetime__month=today.month, taskdatetime__day=today.day).order_by('-taskdatetime')
+        today = datetime.now()
+        tasks =  self.filter(user__id=user_id, 
+        taskdatetime__year=today.year,
+        taskdatetime__month=today.month, 
+        taskdatetime__day=today.day).order_by('-taskdatetime')
         return tasks
        
     def getFutureTasks(self, user_id):       
-        today = datetime.utcnow()
+        today = datetime.now()
         print today
-        tasks =  self.exclude(user__id=user_id, 
-                            taskdatetime__date__lte=today.date(),                            
-                            ).order_by('-taskdatetime')
+        tasks =  self.exclude(taskdatetime__date__lte=today.date(),                            
+                            ).filter(user__id=user_id,).order_by('-taskdatetime')
         return tasks
         
     def getTask(self, task_id):             
