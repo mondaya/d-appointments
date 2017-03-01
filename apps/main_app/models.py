@@ -47,7 +47,10 @@ class AppointmentManager(models.Manager):
        
     def getFutureTasks(self, user_id):       
         today = datetime.utcnow()
-        tasks =  self.exclude(user__id=user_id, taskdatetime__year=today.year,taskdatetime__month=today.month, taskdatetime__day=today.day).order_by('-taskdatetime')
+        print today
+        tasks =  self.exclude(user__id=user_id, 
+                            taskdatetime__lte=today,                            
+                            ).order_by('-taskdatetime')
         return tasks
         
     def getTask(self, task_id):             
