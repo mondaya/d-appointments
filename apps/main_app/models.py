@@ -49,7 +49,7 @@ class AppointmentManager(models.Manager):
         today = datetime.utcnow()
         print today
         tasks =  self.exclude(user__id=user_id, 
-                            taskdatetime__lte=today,                            
+                            taskdatetime__date__lte=today.date(),                            
                             ).order_by('-taskdatetime')
         return tasks
         
