@@ -83,7 +83,9 @@ def update(request, task_id):
             if rsp['status'] :            
                 for error in rsp['errors']:
                     messages.error(request, error)
-            return redirect('dashboard:home')
+                return redirect('dashboard:show_update',  task_id)
+            else:
+                return redirect('dashboard:home')
         except KeyError:
                 return redirect('home:signup')
             
@@ -96,6 +98,12 @@ def delete(request, task_id):
                     'status': request.session['user_status'],                             
                 }
             rsp = Appointment.objects.deleteTask(task_id)  
-            return redirect('dashboard:home')            
+            print rsp
+            if rsp['status'] :            
+                for error in rsp['errors']:
+                    messages.error(request, error)
+                return redirect('dashboard:show_delete',  task_id)
+            else:
+                return redirect('dashboard:home')         
         except KeyError:
             return redirect('home:signup')

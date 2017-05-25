@@ -46,24 +46,31 @@ class AppointmentManager(models.Manager):
         tasks =  self.filter(user__id=user_id, 
         taskdatetime__year=today.year,
         taskdatetime__month=today.month, 
-        taskdatetime__day=today.day).order_by('-taskdatetime')
+        taskdatetime__day=today.day).order_by('taskdatetime')
         return tasks
        
     def getFutureTasks(self, user_id):       
         today = datetime.now()
         print today
         tasks =  self.exclude(taskdatetime__date__lte=today.date(),                            
-                            ).filter(user__id=user_id,).order_by('-taskdatetime')
+                            ).filter(user__id=user_id,).order_by('taskdatetime')
         return tasks
         
     def getTask(self, task_id):             
         usrtask = self.get(id=task_id)
         return usrtask
         
-    def deleteTask(self, task_id):             
-        usrtask = self.get(id=task_id)
-        usrtask.delete()
-        return
+    def deleteTask(self, task_id):
+        rsp = {}
+        rsp['status'] = False
+        try :    
+            usrtask = self.get(id=task_id)
+            usrtask.delete()
+        except DoesNotExist:
+            rsp['status'] = True
+            rsp['errors'] = ["Appointment matching query does not exist"]
+        return rsp 
+        
         
         
     def addTask(self,user_id, postData):
@@ -109,9 +116,12 @@ class Appointment(models.Model):
     
     task=models.CharField(max_length=3000)  
     user=models.ForeignKey(User, related_name='task_added_by')
-    taskdatetime=models.DateTimeField(auto_now=False, auto_now_add=False, unique=True)
+    taskdatetime=models.DateTimeField(auto_now=False, auto_now_add=False)
     status=models.CharField(max_length=30) 
     created_at=models.DateTimeField(auto_now_add=True)
     updated_at=models.DateTimeField(auto_now=True)    
     objects=AppointmentManager()
+    
+    class Meta:
+        unique_together = (("user", "taskdatetime"),)
     
